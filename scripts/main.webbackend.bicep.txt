@@ -1,0 +1,79 @@
+// Web frontend
+module webbackend './app/webbackend.bicep' = {
+  name: 'webbackend'
+  scope: resourceGroup
+  params: {
+    name: !empty(webContainerAppName) ? webContainerAppName : '${abbrs.appContainerApps}web-${resourceToken}'
+    location: location
+    tags: union(updatedTags, { 'azd-service-name': 'backend' })
+    appServicePlanId: appServicePlan.outputs.id
+    runtimeName: 'dotnet'
+    runtimeVersion: 'v8.0'
+    appCommandLine: ''
+    scmDoBuildDuringDeployment: true
+    managedIdentity: true
+    allowedOrigins: [ '' ]
+    clientAppId: ''
+    serverAppId: ''
+    clientSecretSettingName: !empty('') ? 'AZURE_CLIENT_APP_SECRET' : ''
+    authenticationIssuerUri: ''
+    use32BitWorkerProcess: false
+    alwaysOn: false
+    appSettings: {
+      AZURE_STORAGE_ACCOUNT: storage.outputs.name
+      AZURE_STORAGE_CONTAINER: storageContainerName
+      AZURE_SEARCH_INDEX: searchIndexName
+      AZURE_SEARCH_SERVICE: searchService.outputs.name
+      AZURE_SEARCH_SEMANTIC_RANKER: 'disabled'
+      AZURE_VISION_ENDPOINT: ''
+      AZURE_SEARCH_SECRET_NAME: ''
+      AZURE_KEY_VAULT_NAME: keyVault.name
+      AZURE_SEARCH_QUERY_LANGUAGE: 'es-ES'
+      AZURE_SEARCH_QUERY_SPELLER: 'lexicon'
+      APPLICATIONINSIGHTS_CONNECTION_STRING: monitoring.outputs.applicationInsightsConnectionString
+      // Shared by all OpenAI deployments
+      OPENAI_HOST: 'azure'
+      AZURE_OPENAI_CUSTOM_URL: ''
+      AZURE_OPENAI_API_VERSION: '2024-03-01-preview'
+      AZURE_OPENAI_EMB_MODEL_NAME: azureEmbeddingModelName
+      AZURE_OPENAI_EMB_DIMENSIONS: 0
+      AZURE_OPENAI_CHATGPT_MODEL: azureOpenAIChatGptModelName
+      AZURE_OPENAI_GPT4V_MODEL: 'gpt-4o'
+      // Specific to Azure OpenAI
+      AZURE_OPENAI_SERVICE: openAiServiceName
+      AZURE_OPENAI_CHATGPT_DEPLOYMENT: azureChatGptDeploymentName
+      AZURE_OPENAI_EMB_DEPLOYMENT: azureEmbeddingDeploymentName
+      AZURE_OPENAI_GPT4V_DEPLOYMENT: azureChatGptDeploymentName
+      // Used only with non-Azure OpenAI deployments
+      OPENAI_API_KEY: openAIApiKey
+      OPENAI_ORGANIZATION: ''
+      // Optional login and document level access control system
+      AZURE_USE_AUTHENTICATION: false
+      AZURE_ENFORCE_ACCESS_CONTROL: false
+      AZURE_SERVER_APP_ID: ''
+      AZURE_SERVER_APP_SECRET: ''
+      AZURE_CLIENT_APP_ID: ''
+      AZURE_CLIENT_APP_SECRET: ''
+      AZURE_TENANT_ID: ''
+      AZURE_AUTH_TENANT_ID: ''
+      AZURE_AUTHENTICATION_ISSUER_URI: ''
+      // CORS support, for frontends on other hosts
+      ALLOWED_ORIGIN: '*'
+      USE_VECTORS: false
+      USE_GPT4V: false
+    }
+  }
+}
+
+
+// AZURE YAML
+webbackend:
+    project: ./app/backend/
+    host: appservice
+    language: dotnet
+    hooks:
+        prepackage:
+            shell: pwsh
+            run: dotnet publish -c Release -o bin/Release/net8.0/publish
+            continueOnError: false
+            interactive: false

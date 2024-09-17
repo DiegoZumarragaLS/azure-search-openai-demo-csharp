@@ -1,0 +1,31 @@
+POST https://ca-web-lsdev4oszzfdkhuuvq.whitehill-a054a6d8.eastus.azurecontainerapps.io/api/chat
+Content-Type: application/json
+Cookie: AppServiceAuthSession=B5JGluvNPH09xQUT7gl9SulJtd412o8041vAYp11jKFLC9NEyTdBX9YJxGl/PHsTTsxAyGS4uWtH9/L6B86CcnVQHrdF6ZzEk35l/N5tc17bUrW+JjyVQBSSKP/nRQkpE84MHBz7d54ht4JeV3cWvC/FqBqD/kfOoHTq/EW2QC/mp2ACZswzQR3Ac5CW7Czbjle25Vti4jq4P+iSQg4OBcYgAEh7PFDi/MXKi7zLfMyJD2z70oTax4uosUPdChoUdrYA5MUCjjB+pfrrtliSKdkBdL1HEQ3qiUJ/O8oWtXpiXkdkHr0gCpNu7UtDcZsxBa08q4z0KSSAT06uS9PRp52EQSzGNBBhI6bT2PhDSkzM2WX3f3Vb+jWT5QVgV/tjsKSK0iMuAfDkllP+9MMAJuCavFghT0nqUr70NOiQy0ffYYfY/0WIaQfAL1CCnLS604gPWwZlE+DRItTOBpgyd375X7Ob+jR57dMfLzEnQdwagJ15vGpo8iLbd2nAOeiYEAoioLUETMNbqrqAEGLuPMQaU0KIwgkc2K4NDRbmWeHe7c/XKNaOhwRDYxr5JMcA7XogJdVZRKcQH72zgCFRAhbv0fgAMXvU07PSzM2B4ED2nSTgiw77KdwZTpVUJfLHhKfqY8ZLQFKag/20P663AlAfIL8PePpHZC2CGWSA7804wbKmu78r8408LkGPEf9BbFdBKknO/rArx7ZwRRozh0foymySTFgcGlwNwuBzU8F8K1ZZ2A64ii+NOM2j+ikIvjZ5V5r/xeKwAF8Pno9rp2dSCGTaXaPqGaTYztOY/sb/hqvbLZuUoXtOVEVvEWHWFsSPpAW10VqtNYAqwi0bg4EzLJk02h+w6pCONqQue7FN79ZQlcjpPN7Wa2qV/0x/rjLKPYHRsUk2A3SwcheVn3zAC9x9zuZTDAYEyzLbX4vJaHhDBf7T1DOhQupjt/OIiEG/vhHCyi996g/GY0r3d8Ax6oa0LqZyf2zRUnGbRg4SnG2wPomJ+25n5HI3WE0LIp3sSPTMEzIOjcfiU2muBZFx2PlOaagrmw0mZc3EDasmXi0QXN4efEW9bJxk5m73GhQvuNamlsRQlF1nKF5yF0OG6f5iHIqo61Il3CuO6YGzcOJOHWr2BnLBGTNQZfM6VISrQakmWNDzmFIcUF+kQazuyIhVnMFxHShtXSrF880=; .AspNetCore.Antiforgery.VyLW6ORzMgk=CfDJ8CmoMTR8qgFFrHWA4J7XHcHQYpJmina1OKgvkqjIOs57kjE7qA5obZDPXtwohTIzys8TARi0gNOavbVaICagbE1-5LZSyY-y3WYJzbRHqHUNqSE8YdAHvJkYnfosrO4ob-NjhcjeoJWmEouDyu9k5nw; XSRF-TOKEN=CfDJ8CmoMTR8qgFFrHWA4J7XHcGZf1nYu7MURZ_KDmKR1jvrlfCW27JB5qvvhRBvoBZOxC2jHPa6MQDt0VUysg-fruW7ogiUT3Iq-hcSkaI249dJSqN038wWPaimpqu2RvaGQ1S-0ORGg_QxMKKT4IPoIRs
+
+{
+    "messages": [
+        {
+            "role": "user",
+            "content": "¿Quién tiene experiencia en .NET o C# y ha trabajado en el sector bancario?",
+            "isUser": true
+        }
+    ],
+    "overrides": {
+        "semantic_ranker": false,
+        "retrieval_mode": "Vector",
+        "semantic_captions": null,
+        "exclude_category": null,
+        "top": 3,
+        "temperature": null,
+        "prompt_template": null,
+        "prompt_template_prefix": null,
+        "prompt_template_suffix": null,
+        "suggest_followup_questions": true,
+        "use_gpt4v": false,
+        "use_oid_security_filter": false,
+        "use_groups_security_filter": false,
+        "vector_fields": false
+    },
+    "lastUserQuestion": "¿Quién tiene experiencia en .NET o C# y ha trabajado en el sector bancario?",
+    "approach": 0
+}

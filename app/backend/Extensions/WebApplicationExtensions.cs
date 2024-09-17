@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace MinimalApi.Extensions;
 
 internal static class WebApplicationExtensions
@@ -25,6 +27,8 @@ internal static class WebApplicationExtensions
 
         api.MapGet("enableLogout", OnGetEnableLogout);
 
+        api.MapGet("getUserInfo", OnGetUserInfo);
+
         return app;
     }
 
@@ -34,6 +38,35 @@ internal static class WebApplicationExtensions
         var enableLogout = !string.IsNullOrEmpty(header);
 
         return TypedResults.Ok(enableLogout);
+    }
+
+    private static IResult OnGetUserInfo(HttpContext context)
+    {
+        var userInfo = GetUserInfo(context);
+        return TypedResults.Ok(userInfo);
+    }
+
+    private static Dictionary<string, object> GetUserInfo(HttpContext context)
+    {
+        var header = context.Request.Headers["X-MS-CLIENT-PRINCIPAL-ID"];
+        var enableLogout = !string.IsNullOrEmpty(header);
+        if (enableLogout)
+        {
+            var user = context.User;
+            if (user is not null && user.Identity is not null)
+            {
+                var userName = user.Identity.Name is not null ? user.Identity.Name : "Anonymous";
+                var claims = user.Claims.Select(c => new { c.Type, c.Value });
+                Dictionary<string, object> userInfo = new()
+                {
+                    { "UserName", userName },
+                    { "Claims", claims }
+                };
+                return userInfo;
+            }
+        }
+
+        return new Dictionary<string, object>();
     }
 
     private static async IAsyncEnumerable<ChatChunkResponse> OnPostChatPromptAsync(
@@ -73,13 +106,16 @@ internal static class WebApplicationExtensions
     private static async Task<IResult> OnPostChatAsync(
         ChatRequest request,
         ReadRetrieveReadChatService chatService,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        HttpContext context)
     {
         if (request is { History.Length: > 0 })
         {
             var response = await chatService.ReplyAsync(
                 request.History, request.Overrides, cancellationToken);
 
+            var userInfo = GetUserInfo(context);
+            
             return TypedResults.Ok(response);
         }
 

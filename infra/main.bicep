@@ -20,8 +20,8 @@ param tags string = ''
 param openAiResourceGroupLocation string
 
 @description('Name of the chat GPT model. Default: gpt-35-turbo')
-@allowed([ 'gpt-35-turbo', 'gpt-4', 'gpt-4o', 'gpt-35-turbo-16k', 'gpt-4-16k' ])
-param azureOpenAIChatGptModelName string = 'gpt-35-turbo'
+@allowed([ 'gpt-35-turbo', 'gpt-4', 'gpt-4o','gpt-4o-mini', 'gpt-35-turbo-16k', 'gpt-4-16k' ])
+param azureOpenAIChatGptModelName string = 'gpt-4o-mini'
 
 param azureOpenAIChatGptModelVersion string ='0613'
 
@@ -115,8 +115,8 @@ param principalType string = 'User'
 @description('Name of the resource group')
 param resourceGroupName string = ''
 
-@description('Name of the search index. Default: gptkbindex')
-param searchIndexName string = 'gptkbindex'
+@description('Name of the search index. Default: gptkbindex3')
+param searchIndexName string = 'gptkbindex3'
 
 @description('Name of the Azure AI Search service')
 param searchServiceName string = ''
@@ -170,7 +170,7 @@ param openAiEmbeddingDeployment string
 param useVision bool = false
 
 var abbrs = loadJsonContent('./abbreviations.json')
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
+var resourceToken = 'lsdev${toLower(uniqueString(subscription().id, environmentName, location))}'
 
 var baseTags = { 'azd-env-name': environmentName }
 var updatedTags = union(empty(tags) ? {} : base64ToJson(tags), baseTags)
