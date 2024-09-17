@@ -84,12 +84,12 @@ public class ReadRetrieveReadChatService
         string? query = null;
         if (overrides?.RetrievalMode != RetrievalMode.Vector)
         {
-            var getQueryChat = new ChatHistory(@"You are a helpful AI assistant, generate search query for followup question.
-Make your respond simple and precise. Return the query only, do not return any other text.
-e.g.
-Northwind Health Plus AND standard plan.
-standard plan AND dental AND employee benefit.
-");
+            var getQueryChat = new ChatHistory(@"Eres un asistente de IA útil, genera una consulta de búsqueda para una pregunta de seguimiento.
+            Haz tu respuesta simple y precisa. Devuelve solo la consulta, no devuelvas ningún otro texto.
+            por ejemplo:
+            Candidatos con más de 3 años de experiencia en .NET.
+            Candidatos con al menos 1 año de experiencia en Python.
+            ");
 
             getQueryChat.AddUserMessage(question);
             var result = await chat.GetChatMessageContentAsync(
@@ -125,7 +125,7 @@ standard plan AND dental AND employee benefit.
         // step 3
         // put together related docs and conversation history to generate answer
         var answerChat = new ChatHistory(
-            "You are a system assistant who helps the company employees with their questions. Be brief in your answers");
+"Eres un asistente de Recursos Humanos que ayuda a los empleados de la empresa con sus preguntas. Sé breve en tus respuestas");
 
         // add chat history
         foreach (var message in history)
@@ -143,13 +143,12 @@ standard plan AND dental AND employee benefit.
         
         if (images != null)
         {
-            var prompt = @$"## Source ##
-{documentContents}
-## End ##
-
-Answer question based on available source and images.
-Your answer needs to be a json object with answer and thoughts field.
-Don't put your answer between ```json and ```, return the json string directly. e.g {{""answer"": ""I don't know"", ""thoughts"": ""I don't know""}}";
+            var prompt = @$"## Fuente ##
+{ documentContents}
+## Fin ##
+Responda la pregunta basada en la fuente disponible e imágenes.
+Su respuesta debe ser un objeto json con los campos de answer y thoughts.
+No ponga su respuesta entre ```json y ```, devuelva la cadena json directamente. Ejemplo: {{""answer"": ""No lo sé"", ""thoughts"": ""No lo sé""}}";
 
             var tokenRequestContext = new TokenRequestContext(new[] { "https://storage.azure.com/.default" });
             var sasToken = await (_tokenCredential?.GetTokenAsync(tokenRequestContext, cancellationToken) ?? throw new InvalidOperationException("Failed to get token"));
@@ -166,14 +165,14 @@ Don't put your answer between ```json and ```, return the json string directly. 
         }
         else
         {
-            var prompt = @$" ## Source ##
+            var prompt = @$" ## Fuente ##
 {documentContents}
-## End ##
+## Fin ##
 
-You answer needs to be a json object with the following format.
+Tu respuesta tiene que ser un objeto json, No ponga su respuesta entre ```json y ```, devolver la cadena json directamente con el siguiente formato.
 {{
-    ""answer"": // the answer to the question, add a source reference to the end of each sentence. e.g. Apple is a fruit [reference1.pdf][reference2.pdf]. If no source available, put the answer as I don't know.
-    ""thoughts"": // brief thoughts on how you came up with the answer, e.g. what sources you used, what you thought about, etc.
+    ""answer"": // la respuesta a la pregunta, agregar una referencia de origen al final de cada frase. por ejemplo, Apple es una fruta [referencia1.pdf][referencia2.pdf]. Si no hay ninguna fuente disponible, poner la respuesta como No lo sé.
+    ""thoughts"": // pensamientos breves sobre cómo llegaste a la respuesta, por ejemplo, qué fuentes utilizaste, en qué pensaste, etc.
 }}";
             answerChat.AddUserMessage(prompt);
         }
@@ -199,18 +198,18 @@ You answer needs to be a json object with the following format.
         // add follow up questions if requested
         if (overrides?.SuggestFollowupQuestions is true)
         {
-            var followUpQuestionChat = new ChatHistory(@"You are a helpful AI assistant");
-            followUpQuestionChat.AddUserMessage($@"Generate three follow-up question based on the answer you just generated.
-# Answer
+            var followUpQuestionChat = new ChatHistory(@"Eres un asistente de IA útil");
+            followUpQuestionChat.AddUserMessage($@"Genera tres preguntas de seguimiento basadas en la respuesta que acabas de generar.
+# Respuesta
 {ans}
 
-# Format of the response
-Return the follow-up question as a json string list. Don't put your answer between ```json and ```, return the json string directly.
-e.g.
+# Formato de la respuesta
+Retorna las preguntas de seguimiento como un Json con una lista de strings. No pongas la respuesta entre ```json y ```, returna el string del json directamente.
+ejemplo.
 [
-    ""What is the deductible?"",
-    ""What is the co-pay?"",
-    ""What is the out-of-pocket maximum?""
+    ""´¿Quién tiene experiencia en JavaScript?"",
+    ""¿Quién tiene experiencia en Java?"",
+    ""¿Quién tiene experiencia en Scrum?""
 ]");
 
             var followUpQuestions = await chat.GetChatMessageContentAsync(

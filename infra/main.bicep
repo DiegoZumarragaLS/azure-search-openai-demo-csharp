@@ -121,8 +121,8 @@ param principalType string = 'User'
 @description('Name of the resource group')
 param resourceGroupName string = ''
 
-@description('Name of the search index. Default: gptkbindex')
-param searchIndexName string = 'gptkbindex'
+@description('Name of the search index. Default: gptkbindex3')
+param searchIndexName string = 'gptkbindex3'
 
 @description('Name of the Azure AI Search service')
 param searchServiceName string = ''
@@ -181,7 +181,7 @@ param openAiEmbeddingDeployment string
 param useVision bool = false
 
 var abbrs = loadJsonContent('./abbreviations.json')
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
+var resourceToken = 'lsdev${toLower(uniqueString(subscription().id, environmentName, location))}'
 
 var baseTags = { 'azd-env-name': environmentName }
 var updatedTags = union(empty(tags) ? {} : base64ToJson(tags), baseTags)

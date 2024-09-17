@@ -25,7 +25,7 @@ public static class MauiProgram
 		{
 			// TODO: Configure this to point to your deployed backend API.
 			// For example: https://MY_HOSTED_APP.example.azurecontainerapps.io/
-			client.BaseAddress = new Uri("TODO");
+			client.BaseAddress = new Uri("https://localhost:7181/");
 		});
 		builder.Services.AddScoped<OpenAIPromptQueue>();
 
